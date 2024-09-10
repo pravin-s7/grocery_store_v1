@@ -1,0 +1,13 @@
+#flex-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}  
+
+#login {
+    padding: 70px 50px 70px 50px; 
+    text-align: center;
+    background-color: #f4f4f4; 
+    border-radius: 3%;
+}    

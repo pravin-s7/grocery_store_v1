@@ -1,0 +1,13 @@
+#href-link {
+    text-decoration: solid;
+    color: black;   
+}
+
+#total_cost {
+    text-align:right;
+    font-size: larger;
+}
+
+#order_now {
+    text-align:right;
+}

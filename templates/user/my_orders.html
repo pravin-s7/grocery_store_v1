@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <title>My Orders</title>
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/cart.css" rel="stylesheet">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <h1>My Orders</h1> <br>
+
+    <div class="container text-center">
+      {% for i in range(product|length) %}
+        <div class="row align-items-start">
+          <div class="col-md-3">
+            <a href="/view_product/{{product[i][10]}}" id="href-link">
+              {% if product[i][14] %}
+              <img src="/static/images/{{product[i][14]}}" alt="Product_Image" height="170px" width="170px">
+              {% else %}
+              <img src="static/image.jpg" alt="Product_Image" height="170px" width="170px">
+              {% endif %}
+            </a>
+          </div>
+
+          <div class="col-md-3">
+            <a href="/view_product/{{product[i][10]}}" id="href-link">
+            <h4>{{product[i][0]}}  </h4> 
+            <span class="badge text-bg-success"> {{product[i][1]}} ⭐</span> <br>
+            <strong> {{product[i][2]}} </strong><br> <br>   
+            Rs. {{product[i][3]}} <br> {% if product[i][4] %} Net_weight - {{product[i][4]}} <br> {% endif %}
+            Quantity - {{product[i][5]}} <br>
+            <strong>Total price - {{product[i][6]}} </strong><br> <br>
+            </a>
+          </div>  
+
+          <div class="col-md-6">
+            <strong><em>Delivery Address</em></strong> - {{ product[i][11] }} <br>
+            <strong><em>Email</em></strong> - {{user.email}} <br>
+            <strong><em>Mobile</em></strong> - {{ product[i][12] }} <br>
+            <strong><em>Order Date</em></strong> - {{ product[i][7] }} <br>
+            <strong><em>Order Status</em></strong> - {{product[i][8]}} <br>
+            <strong><em>Your Ratings</em></strong> - {{product[i][13]}} ⭐ <br>
+            <strong><em>Your Review</em></strong> - {{product[i][15]}} <br> <br>
+
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#{{product[i][10]}}">
+                Review
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="{{product[i][10]}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Review {{product[i][0]}}</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="/review" method="post">
+                        <input type="hidden" name="order_id" value="{{product[i][9]}}" required>
+                        <input type="hidden" name="product_id" value="{{product[i][10]}}" required>
+                        <div class="mb-3">
+                          <h6>Rate the product:</h6>
+                          <input class="form-check-input" type="radio" name="rating" id="rating1" value="1">
+                          <label class="form-check-label" for="rating1">
+                            1
+                          </label> &emsp; &nbsp;
+                          <input class="form-check-input" type="radio" name="rating" id="rating2" value="2">
+                          <label class="form-check-label" for="rating2">
+                            2
+                          </label> &emsp; &nbsp;
+                          <input class="form-check-input" type="radio" name="rating" id="rating3" value="3">
+                          <label class="form-check-label" for="rating3">
+                            3
+                          </label> &emsp; &nbsp;
+                          <input class="form-check-input" type="radio" name="rating" id="rating4" value="4" checked>
+                          <label class="form-check-label" for="rating4">
+                            4
+                          </label> &emsp; &nbsp;
+                          <input class="form-check-input" type="radio" name="rating" id="rating5" value="5">
+                          <label class="form-check-label" for="rating5">
+                            5
+                          </label>
+                          <div class="col-auto">
+                            <span class="form-text">
+                                Rate from 1 to 5
+                            </span>
+                        </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="review" class="col-form-label">Message:</label>
+                          <textarea class="form-control" id="review" name="review"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-dark btn-sm" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Review</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <hr style="margin-bottom: 16px; color: black;"> 
+      <br>
+        {% endfor %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>    
+</body>
+</html>

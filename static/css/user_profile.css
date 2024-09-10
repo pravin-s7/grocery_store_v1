@@ -1,0 +1,12 @@
+.flex-style{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#card {
+    width: 300px; 
+    height: fit-content; 
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}

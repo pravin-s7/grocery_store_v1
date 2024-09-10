@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        #ctg-detail {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+
+    <h1 style="text-align: center;"> Category </h1> <br>
+
+    <div class="input-group mb-3">
+      <form class="d-flex" role="search" method="GET" action="/category_search">
+
+          <input class="form-control me-2" name="q" size="170" type="search" placeholder="Search for Categories" aria-label="Search" required/>
+          
+          <button class="btn btn-outline-dark" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+          </button>
+      </form>
+  </div>
+
+  <br>
+        
+        {% if category|length == 0 %}
+        <h2><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg> Add the Categories now!!! </h2>
+        {% else %}
+        <table class="table table-striped" id = "ctg-detail">
+            <thead>
+              <tr class="table-dark">
+                <th scope="col">Category ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Image</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ctg in category %} 
+              <tr>
+                <td scope="row"><a href="/category/{{ ctg.c_id }}/product" id="href" style="text-decoration: solid;">{{ ctg.c_id }}</a></td>
+                <td>{{ ctg.c_name }}</td>
+                <td>{{ ctg.description }} </td>
+                <td>{{ ctg.image }} </td>
+                <td>
+                    <a class="btn btn-info" href="/category/{{ ctg.c_id }}/update" role="button">Update</a>
+                    <a class="btn btn-danger" href="/category/{{ ctg.c_id }}/delete" role="button" onclick="return confirm('Are you sure you want to delete this category and its products?');">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+        <a class="btn btn-primary" href="/category/create" role="button"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg> Add Category </a> &nbsp;
+        <a class="btn btn-secondary" href="/admin/dashboard" role="button"> Go back </a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>            
+</body>
+</html>

@@ -1,0 +1,18 @@
+.show-flex{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.flex-product{
+    display: flex;
+    gap: 1rem;
+    scroll-behavior:smooth;
+    scroll-margin: 0px;
+    scroll-behavior: smooth;
+    overflow-x: auto;
+}
+
+.flex-product::-webkit-scrollbar {
+    display: none;
+}

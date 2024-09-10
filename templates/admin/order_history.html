@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History of users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        #href {
+            text-decoration: solid;
+        }
+        #order-detail {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <h1 style="text-align: center;"> Order history </h1> <br>
+        
+        {% if order|length == 0 %}
+        <h2> No Orders till now!!! </h2>
+        {% else %}
+
+        <table class="table table-striped" id = "order-detail">
+            <thead>
+              <tr class="table-dark">
+                <th scope="col">Order Id</th>
+                <th scope="col">User Id</th>
+                <th scope="col">Product Id</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Ratings</th>
+                <th scope="col">Order Date</th>
+                <th scope="col">Order status</th>
+                <th scope="col">Update status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in range(order|length) %}
+              <tr>
+                <td scope="row"><a href="/order_detail/{{order[i][0]}}" id="href">{{ order[i][0] }}</a></td>
+                <td>{{ order[i][1] }}</td>
+                <td>{{ order[i][2] }}</td>
+                <td>{{ order[i][3] }}</td>
+                <td>{{ order[i][4] }}</td>
+                <td>{{ order[i][5] }}</td>
+                <td>{{ order[i][6] }}</td>
+                <td>
+                    <form action="/orders/{{order[i][0]}}/update" method="post">
+                        <input type="hidden" class="form-control" value="{{order[i][0]}}" name="order_id">
+                        <select name="status" id="status" required>
+                            <option>Delivered</option>
+                            <option>On the way</option>
+                            <option>Pending</option>
+                            <option>Order Cancelled</option>
+                        </select>
+                        <input class="btn btn-info btn-sm" type="submit" value="Update">
+                    </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+        <a class="btn btn-secondary" href="/admin/dashboard" role="button"> Go back </a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>        
+</body>
+</html>

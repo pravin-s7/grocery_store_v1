@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
+    <link href="/static/css/view.css" rel="stylesheet">
+    <title>{{ product.p_name }}</title>
+</head>
+<body>
+  {% include 'navbar.html' %}
+
+  {% with messages = get_flashed_messages() %}  
+    {% if messages %}  
+      {% for message in messages %}  
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}  
+    {% endif %}  
+  {% endwith %}   
+
+  <div class="input-group mb-3">
+    <form class="d-flex" role="search" method="GET" action="/search">
+
+        <input class="form-control me-2" name="q" size="170" type="search" placeholder="Search for Categories, products" aria-label="Search" required/>
+        
+        <button class="btn btn-outline-dark" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg>
+        </button>
+    </form>
+  </div>
+
+  <br>
+
+  <div class="container text-center">
+    <div class="row align-items-start">
+      <div class="col-md-6">
+        {% if product.image %}
+          <img src="/static/images/{{product.image}}" alt="Product_Image" height="300px" width="350px" style="border-radius: 5%;">
+        {% else %}
+          <img src="/static/image.jpg" alt="Product_Image" height="300px" width="300px">
+        {% endif %}
+      </div>
+      <div class="col-md-6">
+        <h4>{{product.p_name}} </h4> {% if product.offer %}
+          {% if product.offer.active %} <span class="badge text-bg-primary">{{product.offer.discount}} % Off</span>{% endif %}
+        {% endif %}    &emsp;
+        <span class="badge text-bg-success"> {{ product.ratings }} ⭐</span> ({{rating}} ratings) &emsp; 
+        {% if product.stock==0 %}
+        <span class="badge text-bg-danger"> Out of Stock</span>
+        {% endif %}
+        <br> <br>
+        {% if product.offer %}
+          {% if product.offer.active %}
+          <strong>Offer Price Rs.{{ "%.2f"|format(((100-product.offer.discount) /100) * product.price) }} {{product.unit}}</strong> &emsp; <del><span>Price - Rs. {{product.price}} </span></del>
+          {% else %}
+          <h6>Price - Rs. {{product.price}} {{product.unit}}</h6>
+          {% endif %}
+        {% else %}
+          <h6>Price - Rs. {{product.price}} {{product.unit}}</h6>  
+        {% endif %}
+        {% if product.net_weight %}
+        <h6>Net_weight - {{product.net_weight}} </h6>
+        {% endif %}
+        <h6>Pkg_Date - {{product.pkg_date}} </h6><br> 
+        <h6>Description: </h6> 
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo repellat possimus quia aliquam voluptatem ducimus dolor nostrum, soluta provident tempore commodi voluptatibus dignissimos eaque ratione fugiat animi adipisci autem nesciunt!</p>
+      </div>
+    </div>
+  </div>
+  <br>
+  
+  <form action="/addcart" method="post" style="text-align: center;">
+    <input type="hidden" name="p_id" value="{{product.p_id}}">
+    <input type="hidden" name="stock" value="{{product.stock}}">
+    <input type="hidden" name="c_id" value="{{product.category.c_id}}">
+    <input type="hidden" name="user_id" value="{{current_user.id}}">
+    <button type="submit" class="btn btn-success btn-md col-sm-2">
+      Add to Cart <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+      </svg>
+    </button>
+  </form> &emsp;
+
+  <form action="/add_wishlist" method="post" style="text-align: center;">
+    <input type="hidden" name="p_id" value="{{product.p_id}}">
+    <input type="hidden" name="user_id" value="{{current_user.id}}">
+    <button type="submit" class="btn btn-danger btn-md col-md-2"> Add to Wishlist
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+    </svg></button>
+  </form> 
+  
+  <br> <br>
+
+  {% if recently_bought_together|length>1 %}
+  <a href="#" id="href"> <h2>Recently Bought Together</h2> </a> <br>
+    <div class="flex-product">
+        {% for order in recently_bought_together %}
+            <a href="/view_product/{{order.product.p_id}}" style="text-decoration: solid; ">
+            <div class="card text-center" id="card">
+                <div class="card-body">
+                  {% if order.product.image %}
+                  <img src="/static/images/{{order.product.image}}" class="card-img" alt="" style="height: 120px;">
+                  {% endif %}
+                <h6 class="card-title"> {{order.product.p_name}} {% if order.product.offer %}
+                  {% if order.product.offer.active %} <span class="badge text-bg-success">{{order.product.offer.discount}} % Off</span>{% endif %}
+                  {% endif %} </h6> 
+                <strong><p class="card-subtitle mb-2 text-body-secondary">{{ order.product.category.c_name }}</p></strong>
+                {% if order.product.offer %}
+                    {% if order.product.offer.active %}
+                    <strong>Price {{ "%.2f"|format(((100-order.product.offer.discount) /100) * order.product.price) }} {{order.product.unit}}</strong> <br>
+                    {% else %}
+                    <strong>Price </strong> {{order.product.price}} {{order.product.unit}}<br>
+                    {% endif %}
+                  {% else %}
+                    <strong>Price </strong> {{order.product.price}} {{order.product.unit}}<br>
+                  {% endif %}
+                  {% if order.product.net_weight %}
+                    <span><strong> Net_wt</strong> {{ order.product.net_weight }}</span> <br>
+                  {% endif %}  
+                    {% if order.product.ratings==0.0 %}
+                    <span></span>
+                    {% else %}
+                    <span><strong>Ratings</strong> {{ order.product.ratings }} ⭐</span> 
+                    {% endif %}
+                </p>
+                </div>
+            </div>
+            </a>
+        {% endfor %}
+    </div>
+  <br>
+  {% endif %}
+
+  {% if product.orders|length>0 %}
+  <div id="review">
+    <h3>Reviews</h3> <br>
+    {% for review in product.orders %}
+      {% if review.ratings %}
+       <strong>{{ review.user.username }}</strong> <span class="badge text-bg-success"> {{ review.ratings }} ⭐</span> &emsp;  <br>
+       {% if review.review %}
+       <p> {{review.review}} </p>
+       {% else %}
+       {% endif %}
+       
+       {% set date = review.ordered_at | string() %}
+       {% set r_date = date.split(' ') %}
+       <p style="font-size: small; color: gray;">{{r_date[0]}}</p>
+       <hr>
+       {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if ctg_prd|length>1 %}
+  <a href="#" id="href"> <h2>Similar products</h2> </a> <br> <!--Based on the Category -->
+    <div class="flex-product">
+        {% for prd in ctg_prd %}
+            {% if product.p_id==prd.p_id %}
+
+            {% else %}
+            <a href="/view_product/{{prd.p_id}}" style="text-decoration: solid; ">
+            <div class="card text-center" id="card">
+                <div class="card-body">
+                  {% if prd.image %}
+                  <img src="/static/images/{{prd.image}}" class="card-img" alt="" style="height: 120px;">
+                  {% endif %}
+                <h6 class="card-title"> {{prd.p_name}} {% if prd.offer %}
+                  {% if prd.offer.active %} <span class="badge text-bg-success">{{prd.offer.discount}} % Off</span>{% endif %}
+                  {% endif %} </h6> 
+                <strong><p class="card-subtitle mb-2 text-body-secondary">{{ prd.category.c_name }}</p></strong>
+                {% if prd.offer %}
+                    {% if prd.offer.active %}
+                    <strong>Price {{ "%.2f"|format(((100-prd.offer.discount) /100) * prd.price) }} {{prd.unit}}</strong> <br>
+                    {% else %}
+                    <strong>Price </strong> {{prd.price}} {{prd.unit}}<br>
+                    {% endif %}
+                  {% else %}
+                    <strong>Price </strong> {{prd.price}} {{prd.unit}}<br>
+                  {% endif %}
+                  {% if prd.net_weight %}
+                    <span><strong> Net_wt</strong> {{ prd.net_weight }}</span> <br>
+                  {% endif %}  
+                    {% if prd.ratings==0.0 %}
+                    <span></span>
+                    {% else %}
+                    <span><strong>Ratings</strong> {{ prd.ratings }} ⭐</span> 
+                    {% endif %}
+                </p>
+                </div>
+            </div>
+            </a>
+            {% endif %}
+        {% endfor %}
+    </div> 
+  <br>
+  {% endif %}  
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>    
+</body>
+</html>

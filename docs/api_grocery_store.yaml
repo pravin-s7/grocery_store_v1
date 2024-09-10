@@ -1,0 +1,644 @@
+openapi: 3.0.0
+info:
+  title: Grocery Store API Documentation
+  description: |
+    <h3> Category Table Schema </h3>  <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>c_id</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>c_name</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>description</td>
+        <td>String</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>image</td>
+        <td>String</td>
+        <td></td>
+      </tr>  
+    </tbody>  </table>
+    <h3> Product Table Schema </h3>  <table>
+      <thead>
+        <th>Column Name</th>
+        <th>Column Type</th>
+        <th>Constraints</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>p_id</td>
+        <td>Integer</td>
+        <td>Primary Key, Auto Increment</td>
+      </tr>
+      <tr>
+        <td>p_name</td>
+        <td>String</td>
+        <td>Unique, Not Null</td>
+      </tr>
+      <tr>
+        <td>unit</td>
+        <td>String</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>price</td>
+        <td>Numeric</td>
+        <td>Not Null</td>
+      </tr>      
+      <tr>
+        <td>description</td>
+        <td>String</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>stock</td>
+        <td>Integer</td>
+        <td>Not Null</td>
+      </tr>
+      <tr>
+        <td>created_at</td>
+        <td>Datetime</td>
+        <td>Not null</td>
+      </tr>
+      <tr>
+        <td>net_weight</td>
+        <td>String</td>
+        <td>Not null</td>
+      </tr>
+      <tr>
+        <td>pkg_date</td>
+        <td>String</td>
+        <td>Not null</td>
+      </tr>       
+      <tr>
+        <td>ratings</td>
+        <td>Numeric</td>
+        <td></td>
+      </tr> 
+      <tr>
+        <td>image</td>
+        <td>String</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>ctg_id</td>
+        <td>Integer</td>
+        <td>Foreign Key (category.c_id), Not Null</td>
+      </tr>
+    </tbody> </table>
+    <h3> Error Codes </h3>  <table>
+      <thead>
+        <th>Resource</th>
+        <th>Error Code</th>
+        <th>Message</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Category</td>
+        <td>CTG001</td>
+        <td>Category name already exists</td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td>CTG002</td>
+        <td>Category not exists</td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td>CTG003</td>
+        <td>This category has some products can't delete it</td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td>CTG004</td>
+        <td>Category not found</td>
+      </tr>
+      <tr>
+        <td>Product</td>
+        <td>PRD001</td>
+        <td>Product name already exists</td>
+      </tr>
+      <tr>
+        <td>Product</td>
+        <td>PRD002</td>
+        <td>Product not exists</td>
+      </tr> 
+      <tr>
+        <td>Product</td>
+        <td>PRD004</td>
+        <td>Product not found</td>
+      </tr> 
+    </tbody> </table>
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/
+paths:
+  /api/category/{category_id}:
+    description: >-
+      End point to read, update and delete a course resource with c_id =
+      categoryId
+    get:
+      description: Operation to Read category resource.
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: category object
+                type: object
+                properties:
+                  c_id:
+                    type: integer
+                    example: 1
+                  c_name:
+                    type: string
+                    example: Chocolate
+                  description:
+                    type: string
+                    example: Category Description Example
+        '404':
+          description: Category not found
+        '500':
+          description: Internal Server Error
+    put:
+      description: Operation to update the category resource.
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                c_name:
+                  type: string
+                  example: Chocolate
+                description:
+                  type: string
+                  example: Category Description Example
+      responses:
+        '200':
+          description: Successfuly updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  c_id:
+                    type: integer
+                    example: 1
+                  c_name:
+                    type: string
+                    example: Chocolate
+                  description:
+                    type: string
+                    example: Category Description Example
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '404':
+          description: Category not found
+        '500':
+          description: Internal Server Error
+    delete:
+      description: Operation to delete the category resource
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successfully Deleted
+        '404':
+          description: Category not found
+        '500':
+          description: Intenal Server Error
+  /api/category:
+    description: End point to create category resource
+    post:
+      description: Operation to create the category resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                c_name:
+                  type: string
+                  example: Chocolate
+                description:
+                  type: string
+                  example: Category Description Example
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  c_id:
+                    type: integer
+                    example: 1
+                  c_name:
+                    type: string
+                    example: Chocolate
+                  description:
+                    type: string
+                    example: Category Description Example
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '409':
+          description: c_name already exist
+        '500':
+          description: Internal Server Error
+  /api/product/{product_id}:
+    description: Url to read, update and delete the product resource.
+    get:
+      description: Operation to read product resource
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: product object
+                type: object
+                properties:
+                  p_id:
+                    type: integer
+                    example: 1
+                  p_name:
+                    type: string
+                    example: Chocobar
+                  unit:
+                    type: string
+                    example: Rs/gram 
+                  price:
+                    type: integer
+                    example: 20
+                  description:
+                    type: string
+                    example: Product Description example
+                  stock:
+                    type: integer
+                    example: 100
+                  net_weight:
+                    type: string
+                    example: 40 grams
+                  created_at:
+                    type: string
+                    example: Wed, 17 May 2023 15:03:02 -0000
+                  pkg_date:
+                    type: string
+                    example: 2023/5/15
+                  ratings:
+                    type: integer
+                    example: 4.4
+                  ctg_id:
+                    type: integer
+                    example: 2
+        '404':
+          description: Product not found
+        '500':
+          description: Internal server error
+    put:
+      description: Operation to update the product resource
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                p_name:
+                  type: string
+                  example: Chocobar
+                unit:
+                  type: string
+                  example: Rs/gram   
+                price:
+                  type: integer
+                  example: 20
+                description:
+                  type: string
+                  example: Product Description example
+                stock:
+                  type: integer
+                  example: 100
+                net_weight:
+                  type: string
+                  example: 40 grams
+                pkg_date:
+                  type: string
+                  example: 2023/5/15
+                ctg_id:
+                  type: integer
+                  example: 2
+      responses:
+        '200':
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  p_id:
+                    type: integer
+                    example: 1
+                  p_name:
+                    type: string
+                    example: Chocobar
+                  unit:
+                    type: string
+                    example: Rs/gram   
+                  price:
+                    type: integer
+                    example: 20
+                  description:
+                    type: string
+                    example: Product Description example
+                  stock:
+                    type: integer
+                    example: 100
+                  created_at:
+                    type: string
+                    example: Wed, 17 May 2023 15:03:02 -0000
+                  net_weight:
+                    type: string
+                    example: 40 grams
+                  pkg_date:
+                    type: string
+                    example: 2023/5/15
+                  ratings:
+                    type: integer
+                    example: 4.4
+                  ctg_id:
+                    type: integer
+                    example: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '404':
+          description: Product not found
+        '500':
+          description: Internal Server Error
+    delete:
+      description: Operation to delete the product resource
+      parameters:
+        - in: path
+          name: product_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Successfully Deleted
+        '404':
+          description: Product not found
+        '500':
+          description: Internal Server Error
+  /api/product:
+    description: Url to create product resource
+    post:
+      description: Operation to create the product resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                p_name:
+                  type: string
+                  example: Chocobar
+                unit:
+                  type: string
+                  example: Rs/gram   
+                price:
+                  type: integer
+                  example: 20
+                description:
+                  type: string
+                  example: Product Description example
+                stock:
+                  type: integer
+                  example: 100
+                net_weight:
+                  type: string
+                  example: 40 grams
+                pkg_date:
+                  type: string
+                  example: 2023/5/15
+                ctg_id:
+                  type: integer
+                  example: 2
+      responses:
+        '201':
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                title: product object
+                type: object
+                properties:
+                  p_id:
+                    type: integer
+                    example: 1
+                  p_name:
+                    type: string
+                    example: Chocobar
+                  price:
+                    type: integer
+                    example: 20
+                  description:
+                    type: string
+                    example: Product Description example
+                  stock:
+                    type: integer
+                    example: 100
+                  created_at:
+                    type: string
+                    example: Wed, 17 May 2023 15:03:02 -0000
+                  net_weight:
+                    type: string
+                    example: 40 grams
+                  pkg_date:
+                    type: string
+                    example: 2023/5/15
+                  ratings:
+                    type: integer
+                    example: 4.4
+                  ctg_id:
+                    type: integer
+                    example: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        '409':
+          description: Product already exist
+        '500':
+          description: Internal Server Error
+  /api/all_category:
+    description: Url to get the the list of categories
+    get:
+      description: URL to get the list of categories
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    c_id:
+                      type: integer
+                      example: 1
+                    c_name:
+                      type: string
+                      example: Chocolate
+                    description:
+                      type: string
+                      example: Category example description
+        '500':
+          description: Internal Server Error
+      tags: []
+  /api/all_product:
+    description: URL to get list of a products
+    get:
+      description: URL to get list of products
+      responses:
+        '200':
+          description: Request successfull
+        '500':
+          description: Internal Server Error
+  /api/all_product/{category_id}:
+    description: Url to read product resource of particular category.
+    get:
+      description: Operation to read product resource of that category
+      parameters:
+        - in: path
+          name: category_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: product object
+                type: array
+                items:
+                  properties:
+                    p_id:
+                      type: integer
+                      example: 1
+                    p_name:
+                      type: string
+                      example: Chocobar
+                    price:
+                      type: integer
+                      example: 20
+                    description:
+                      type: string
+                      example: Product Description example
+                    stock:
+                      type: integer
+                      example: 100
+                    net_weight:
+                      type: string
+                      example: 40 grams
+                    created_at:
+                      type: string
+                      example: Wed, 17 May 2023 15:03:02 -0000
+                    pkg_date:
+                      type: string
+                      example: 2023/5/15
+                    ratings:
+                      type: integer
+                      example: 4.4
+                    ctg_id:
+                      type: integer
+                      example: 2
+        '404':
+          description: Products not found
+        '500':
+          description: Internal server error
